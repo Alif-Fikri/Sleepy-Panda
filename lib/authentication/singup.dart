@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sleepys/pages/home.dart';
 import 'package:sleepys/widgets/profilepage.dart';
+import 'package:sleepys/helper/api_endpoints.dart';
 import '../pages/data_user/namepage.dart';
 import 'loginpage.dart';
 import '../widgets/signupprovider.dart';
@@ -14,7 +15,7 @@ class Signup extends StatelessWidget {
   const Signup({Key? key}) : super(key: key);
 
   bool _isValidEmail(String email) {
-    // List of allowed domains
+    
     const allowedDomains = [
       'gmail.com',
       'yahoo.com',
@@ -22,7 +23,7 @@ class Signup extends StatelessWidget {
       'hotmail.com'
     ];
 
-    // Regex to check the general email format
+    
     final regex = RegExp(
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
 
@@ -30,10 +31,10 @@ class Signup extends StatelessWidget {
       return false;
     }
 
-    // Extract domain from the email
+    
     final emailDomain = email.split('@').last;
 
-    // Check if the domain is in the allowed list
+    
     if (!allowedDomains.contains(emailDomain)) {
       return false;
     }
@@ -118,10 +119,9 @@ class Signup extends StatelessWidget {
       return;
     }
 
-    // Lanjutkan dengan proses signup seperti biasa
+    
     try {
-      final url = Uri.parse(
-          'http://103.129.148.84/register/'); // Ganti dengan URL yang sesuai
+      final url = ApiEndpoints.authRegister();
       final response = await http.post(
         url,
         headers: {

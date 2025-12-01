@@ -13,12 +13,12 @@ class MonthLineChart extends StatefulWidget {
 
 class _MonthLineChartState extends State<MonthLineChart> {
   List<double> originalYValues =
-      []; // Initialize the list with non-nullable double
+      []; 
 
   @override
   Widget build(BuildContext context) {
-    final double minY = 20.0; // 20:00 (8 PM)
-    final double maxY = 30.0; // 25:00 means 01:00 (1 AM next day)
+    final double minY = 20.0; 
+    final double maxY = 30.0; 
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -150,9 +150,19 @@ class _MonthLineChartState extends State<MonthLineChart> {
                       return touchedSpots.map((spot) {
                         int index = spot.x.toInt();
 
-                        // Ensure the index is within bounds
+                        
                         if (index < originalYValues.length) {
                           double originalY = originalYValues[index];
+
+                          if (originalY.isNaN) {
+                            return LineTooltipItem(
+                              'Data tidak tersedia\n',
+                              const TextStyle(
+                                color: Colors.pink,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            );
+                          }
                           int hours = originalY.toInt();
                           int minutes = ((originalY - hours) * 60).toInt();
 
@@ -196,31 +206,27 @@ class _MonthLineChartState extends State<MonthLineChart> {
     double maxY = 30.0;
 
     List<FlSpot> spots = [];
-    originalYValues.clear(); // Clear the list before filling
+    originalYValues.clear(); 
 
     for (int i = 0; i < widget.data.length; i++) {
       if (widget.data[i] != null) {
         double yValue = widget.data[i]!;
-        originalYValues.add(yValue); // Store original Y value
+        originalYValues.add(yValue); 
 
-        // Correct the Y value for display
+        
         if (yValue < 6) {
-          // Time between 00:00 - 05:59 should be treated as post-midnight (after 24:00)
+          
           yValue += 24;
         }
 
-        // Ensure Y values are within displayable range
+        
         yValue = yValue.clamp(minY, maxY);
 
         spots.add(FlSpot(i.toDouble(), yValue));
       } else {
-        originalYValues.add(0); // Placeholder value for nulls
+        
+        originalYValues.add(double.nan);
       }
-    }
-
-    // Add a tiny offset to avoid a single data point issue
-    if (spots.length == 1) {
-      spots.add(FlSpot(spots[0].x + 0.1, spots[0].y));
     }
 
     return spots;

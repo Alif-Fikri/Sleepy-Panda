@@ -660,7 +660,7 @@ class InsomniaPage extends StatelessWidget {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => HomePage(
-                              userEmail: email), // Gunakan parameter email
+                              userEmail: email), 
                         ),
                       );
                     },

@@ -4,6 +4,7 @@ import '../../widgets/alarmscreen.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:permission_handler/permission_handler.dart';
+import 'package:sleepys/helper/api_endpoints.dart';
 
 class SleepPage extends StatefulWidget {
   final String email;
@@ -74,9 +75,8 @@ class _SleepPageState extends State<SleepPage> {
       selectedSleepMinute ?? 0,
     );
 
-    final url = Uri.parse('http://103.129.148.84/save-sleep-record/');
     final response = await http.post(
-      url,
+      ApiEndpoints.sleepRecords(),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -166,7 +166,7 @@ class _SleepPageState extends State<SleepPage> {
         child: ConstrainedBox(
           constraints: BoxConstraints(
             minHeight: screenSize
-                .height, // Mengatur tinggi minimum agar sesuai dengan layar
+                .height, 
           ),
           child: Container(
             decoration: BoxDecoration(

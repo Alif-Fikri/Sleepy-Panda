@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:sleepys/pages/monthchart/monthbarchart.dart';
 import 'package:sleepys/pages/monthchart/monthlinechart_sleeptime.dart';
 import 'package:sleepys/pages/monthchart/monthlinechart_wakeuptime.dart';
+import 'package:sleepys/helper/api_endpoints.dart';
 
 class MonthPage extends StatefulWidget {
   final String email;
@@ -18,13 +19,15 @@ class MonthPage extends StatefulWidget {
 
 Future<Map<String, dynamic>> fetchMonthlyData(
     String email, String month, String year) async {
-  // Constructing the URL with the required month and year parameters
-  final url = Uri.parse(
-      'http://103.129.148.84/get-monthly-sleep-data/$email?month=$month&year=$year');
+  final uri = ApiEndpoints.sleepMonthly(
+    email,
+    month: month,
+    year: year,
+  );
 
-  final response = await http.get(url);
+  final response = await http.get(uri);
 
-  print('Request URL: $url');
+  print('Request URL: $uri');
   print('Response Status Code: ${response.statusCode}');
   print('Response Body: ${response.body}');
 
@@ -52,26 +55,26 @@ class _MonthPageState extends State<MonthPage> {
 
   void _fetchData() async {
     setState(() {
-      isLoading = true; // Set loading to true before fetching data
+      isLoading = true; 
     });
 
     try {
       String month = startDate.month
           .toString()
-          .padLeft(2, '0'); // Ensure month is two digits
+          .padLeft(2, '0'); 
       String year = startDate.year.toString();
 
       Map<String, dynamic> data =
           await fetchMonthlyData(widget.email, month, year);
 
-      // Tambahkan log untuk mengecek isi data
+      
       print("Fetched Data: $data");
 
       setState(() {
         monthlyData = data;
       });
 
-      // Tambahkan log untuk mengecek hasil evaluasi kondisi
+      
       if (monthlyData.containsKey('daily_sleep_durations')) {
         print(
             "daily_sleep_durations found: ${monthlyData['daily_sleep_durations']}");
@@ -86,15 +89,15 @@ class _MonthPageState extends State<MonthPage> {
       print("Error fetching data: $e");
     } finally {
       setState(() {
-        isLoading = false; // Ensure loading is false after fetching
+        isLoading = false; 
       });
     }
   }
 
   void _previousMonth() {
     setState(() {
-      isLoading = true; // Set loading status to true
-      monthlyData = {}; // Clear old data
+      isLoading = true; 
+      monthlyData = {}; 
       startDate = DateTime(startDate.year, startDate.month - 1, 1);
       _fetchData();
     });
@@ -102,8 +105,8 @@ class _MonthPageState extends State<MonthPage> {
 
   void _nextMonth() {
     setState(() {
-      isLoading = true; // Set loading status to true
-      monthlyData = {}; // Clear old data
+      isLoading = true; 
+      monthlyData = {}; 
       startDate = DateTime(startDate.year, startDate.month + 1, 1);
       _fetchData();
     });
@@ -111,12 +114,11 @@ class _MonthPageState extends State<MonthPage> {
 
   @override
   Widget build(BuildContext context) {
-    DateTime endDate = DateTime(startDate.year, startDate.month + 1, 0);
     String year = DateFormat('yyyy').format(startDate);
     double baseFontSize = MediaQuery.of(context).size.width * 0.04;
     final dateFormat = DateFormat('MMMM', 'id');
 
-    // Generate sleep data
+    
     final sleepData = (monthlyData.containsKey('weekly_sleep_durations') &&
             monthlyData['weekly_sleep_durations'] is List)
         ? List<double>.generate(
@@ -137,11 +139,11 @@ class _MonthPageState extends State<MonthPage> {
                   double minutes = double.parse(time.split(":")[1]) / 60;
                   return hours + minutes;
                 } else {
-                  return null; // Return null if there's no data
+                  return null; 
                 }
               })
             : List<double?>.filled(
-                4, null); // Use List<double?> for nullable values
+                4, null); 
 
     final wakeUpTimes = (monthlyData.containsKey('weekly_wake_times') &&
             monthlyData['weekly_wake_times'] is Map)
@@ -154,11 +156,11 @@ class _MonthPageState extends State<MonthPage> {
               double minutes = double.parse(time.split(":")[1]) / 60;
               return hours + minutes;
             } else {
-              return null; // Return null if there's no data
+              return null; 
             }
           })
         : List<double?>.filled(
-            4, null); // Use List<double?> for nullable values
+            4, null); 
 
     if (isLoading) {
       return Scaffold(
@@ -172,7 +174,7 @@ class _MonthPageState extends State<MonthPage> {
         (monthlyData['daily_sleep_durations'] as List).length == 30 &&
         (monthlyData['daily_sleep_durations'] as List).every((duration) =>
             duration != null &&
-            duration > 0); // Pastikan data lengkap dan valid
+            duration > 0); 
 
     return Scaffold(
       backgroundColor: Color(0xFF20223F),
@@ -184,7 +186,7 @@ class _MonthPageState extends State<MonthPage> {
             children: [
               MonthlySleepProfile(
                 email: widget.email,
-                hasSleepData: hasFullMonthData, // Only show if full month data
+                hasSleepData: hasFullMonthData, 
               ),
               SizedBox(height: 10),
               Text(
@@ -211,7 +213,7 @@ class _MonthPageState extends State<MonthPage> {
                       setState(() {
                         _isBackButtonPressed = !_isBackButtonPressed;
                         _isNextButtonPressed =
-                            false; // Reset other button state
+                            false; 
                         _previousMonth();
                       });
                     },
@@ -236,7 +238,7 @@ class _MonthPageState extends State<MonthPage> {
                       setState(() {
                         _isNextButtonPressed = !_isNextButtonPressed;
                         _isBackButtonPressed =
-                            false; // Reset other button state
+                            false; 
                         _nextMonth();
                       });
                     },
@@ -248,7 +250,7 @@ class _MonthPageState extends State<MonthPage> {
                   : Padding(
                       padding: const EdgeInsets.only(top: 20),
                       child: Text(
-                        'Belum ada catatan tidur untuk minggu ini.',
+                        'Belum ada catatan tidur untuk bulan ini.',
                         style: TextStyle(
                           fontSize: baseFontSize,
                           color: Colors.white,
@@ -285,7 +287,7 @@ class _MonthPageState extends State<MonthPage> {
                       : Padding(
                           padding: const EdgeInsets.only(top: 20),
                           child: Text(
-                            'Belum ada catatan tidur untuk minggu ini.',
+                            'Belum ada catatan tidur untuk bulan ini.',
                             style: TextStyle(
                               fontSize: baseFontSize,
                               color: Colors.white,
@@ -325,7 +327,7 @@ class _MonthPageState extends State<MonthPage> {
                       : Padding(
                           padding: const EdgeInsets.only(top: 20),
                           child: Text(
-                            'Belum ada catatan tidur untuk minggu ini.',
+                            'Belum ada catatan tidur untuk bulan ini.',
                             style: TextStyle(
                               fontSize: baseFontSize,
                               color: Colors.white,
@@ -364,7 +366,7 @@ class _MonthPageState extends State<MonthPage> {
                       : Padding(
                           padding: const EdgeInsets.only(top: 20),
                           child: Text(
-                            'Belum ada catatan tidur untuk minggu ini.',
+                            'Belum ada catatan tidur untuk bulan ini.',
                             style: TextStyle(
                               fontSize: baseFontSize,
                               color: Colors.white,
@@ -398,27 +400,27 @@ class SleepEntry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get screen width
+    
     double screenWidth = MediaQuery.of(context).size.width;
 
-    // Adjust sizes based on screen width
-    final double imageHeight = screenWidth * 0.06; // 6% of screen width
-    final double imageWidth = screenWidth * 0.06; // 6% of screen width
-    final double fontSizeContent = screenWidth * 0.035; // 3.5% of screen width
-    final double fontSizeTitle = screenWidth * 0.03; // 3% of screen width
-    final double fontSizeValue = screenWidth * 0.03; // 3% of screen width
+    
+    final double imageHeight = screenWidth * 0.06; 
+    final double imageWidth = screenWidth * 0.06; 
+    final double fontSizeContent = screenWidth * 0.035; 
+    final double fontSizeTitle = screenWidth * 0.03; 
+    final double fontSizeValue = screenWidth * 0.03; 
 
-    final double imageTop = screenWidth * 0.05; // 5% of screen width
-    final double imageLeft = screenWidth * 0.025; // 2.5% of screen width
-    final double contentLeft = screenWidth * 0.1; // 10% of screen width
-    final double contentTop = screenWidth * 0.0125; // 1.25% of screen width
-    final double titleTop = screenWidth * 0.05; // 5% of screen width
-    final double valueTop = screenWidth * 0.0875; // 8.75% of screen width
+    final double imageTop = screenWidth * 0.05; 
+    final double imageLeft = screenWidth * 0.025; 
+    final double contentLeft = screenWidth * 0.1; 
+    final double contentTop = screenWidth * 0.0125; 
+    final double titleTop = screenWidth * 0.05; 
+    final double valueTop = screenWidth * 0.0875; 
 
     return Card(
       color: Color(0xFF272E49),
       child: Padding(
-        padding: EdgeInsets.all(screenWidth * 0.025), // 2.5% of screen width
+        padding: EdgeInsets.all(screenWidth * 0.025), 
         child: Stack(
           children: [
             Positioned(

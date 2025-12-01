@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'dart:async';
 import '../home.dart';
 import 'package:sleepys/helper/note_card.dart';
+import 'package:sleepys/helper/api_endpoints.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Weightpage extends StatefulWidget {
   final String name;
@@ -30,43 +32,69 @@ class Weightpage extends StatefulWidget {
 }
 
 class _WeightpageState extends State<Weightpage> {
-  FixedExtentScrollController _controller = FixedExtentScrollController();
+  final FixedExtentScrollController _controller = FixedExtentScrollController();
   int selectedItem = 0;
   Timer? _timer;
+  bool _isNavigating = false;
 
   @override
   void dispose() {
     _timer?.cancel();
+    _controller.dispose();
     super.dispose();
+  }
+
+  String _normalizeGender(String gender) {
+    final lower = gender.toLowerCase();
+    if (lower == 'male' || gender == '1') {
+      return '1';
+    }
+    if (lower == 'female' || gender == '0') {
+      return '0';
+    }
+    return gender;
   }
 
   Future<void> saveWeight(int weight) async {
     try {
-      final response = await http.put(
-        Uri.parse(
-            'http://103.129.148.84/save-weight/'), // Update the URL as needed
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+
+      if (token == null || token.isEmpty) {
+        throw Exception('Token tidak tersedia untuk menyimpan berat badan');
+      }
+
+      final normalizedGender = _normalizeGender(widget.gender);
+      final payload = <String, dynamic>{
+        'email': widget.email,
+        'name': widget.name,
+        'gender': normalizedGender,
+        'work': widget.work,
+        'date_of_birth': widget.date_of_birth,
+        'height': widget.height,
+        'weight': weight,
+      };
+
+      final response = await http.patch(
+        ApiEndpoints.usersPatch(widget.email),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $token',
         },
-        body: jsonEncode(<String, dynamic>{
-          'email': widget.email,
-          'name': widget.name,
-          'gender': widget.gender,
-          'work': widget.work,
-          'date_of_birth': widget.date_of_birth,
-          'height': widget.height,
-          'weight': weight,
-        }),
+        body: jsonEncode(payload),
       );
 
       if (response.statusCode == 200) {
         print('Weight saved successfully: ${jsonDecode(response.body)}');
+        await prefs.setDouble('weight', weight.toDouble());
+        await prefs.setDouble('height', widget.height.toDouble());
       } else {
         print('Failed to save weight: ${response.body}');
         throw Exception('Failed to save weight');
       }
     } catch (error) {
-      print('Error: $error');
+      print('Error saving weight: $error');
+      rethrow;
     }
   }
 
@@ -79,23 +107,35 @@ class _WeightpageState extends State<Weightpage> {
 
   void _resetTimer() {
     _timer?.cancel();
-    _timer = Timer(Duration(seconds: 3), () {
-      saveWeight(selectedItem).then((_) {
-        Navigator.push(
-          context,
+    _timer = Timer(const Duration(seconds: 3), () async {
+      if (!mounted || _isNavigating) {
+        return;
+      }
+
+      _isNavigating = true;
+      final int weight = selectedItem;
+
+      try {
+        await saveWeight(weight);
+        if (!mounted) {
+          return;
+        }
+
+        Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => HomePage(userEmail: widget.email),
           ),
         );
-      }).catchError((error) {
+      } catch (error) {
         print('Error: $error');
-      });
+      } finally {
+        _isNavigating = false;
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // MediaQuery for responsive sizing
     final double deviceWidth = MediaQuery.of(context).size.width;
     final double titleFontSize = deviceWidth * 0.06;
     final double subtitleFontSize = deviceWidth * 0.045;
@@ -184,8 +224,7 @@ class _WeightpageState extends State<Weightpage> {
                                   ),
                                 );
                               },
-                              childCount:
-                                  200, // This gives a range from 0 kg to 199 kg
+                              childCount: 200,
                             ),
                           ),
                         ),

@@ -9,9 +9,9 @@ import 'package:sleepys/helper/ProfileImageProvider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Mengatur orientasi aplikasi hanya ke potret (portrait)
+  
   await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp, // Potret normal
+    DeviceOrientation.portraitUp, 
   ]);
 
   await initializeDateFormatting('id', null);

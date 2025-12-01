@@ -13,18 +13,18 @@ class WeekBarChart extends StatefulWidget {
 }
 
 class _WeekBarChartState extends State<WeekBarChart> {
-  int touchedIndex = -1; // Menyimpan index yang disentuh
+  int touchedIndex = -1; 
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
         double chartWidth =
-            constraints.maxWidth * 0.9; // 90% dari lebar yang tersedia
+            constraints.maxWidth * 0.9; 
         double chartHeight =
-            constraints.maxHeight * 0.5; // 50% dari tinggi yang tersedia
+            constraints.maxHeight * 0.5; 
         double barWidth =
-            chartWidth / (7 * 1.5); // 7 hari dengan jarak antar bar
+            chartWidth / (7 * 1.5); 
 
         if (constraints.maxHeight.isInfinite) {
           chartHeight = 200;
@@ -47,7 +47,7 @@ class _WeekBarChartState extends State<WeekBarChart> {
                     sideTitles: SideTitles(
                       showTitles: true,
                       getTitlesWidget: (value, meta) {
-                        // Mengambil tanggal dari hari pertama di minggu tersebut
+                        
                         DateTime date =
                             widget.startDate.add(Duration(days: value.toInt()));
                         String dayText = DateFormat('EEE').format(date);
@@ -66,7 +66,7 @@ class _WeekBarChartState extends State<WeekBarChart> {
                   leftTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
-                      interval: 2, // Menampilkan setiap interval 2 jam
+                      interval: 2, 
                       getTitlesWidget: (value, meta) {
                         if (value < minY || value > maxY) return Container();
 
@@ -111,7 +111,7 @@ class _WeekBarChartState extends State<WeekBarChart> {
                     tooltipMargin: 8,
                     getTooltipItem: (group, groupIndex, rod, rodIndex) {
                       double originalValue =
-                          widget.sleepData[group.x]; // Nilai asli
+                          widget.sleepData[group.x]; 
                       return BarTooltipItem(
                         '${originalValue.toInt()}j',
                         TextStyle(
@@ -122,8 +122,8 @@ class _WeekBarChartState extends State<WeekBarChart> {
                     },
                   ),
                 ),
-                minY: minY, // Set minY ke 2j
-                maxY: maxY, // Set maxY ke 12j
+                minY: minY, 
+                maxY: maxY, 
               ),
             ),
           ),
@@ -144,7 +144,7 @@ class _WeekBarChartState extends State<WeekBarChart> {
             toY: displayedValue,
             color: index == touchedIndex
                 ? Colors.red
-                : Color(0xFF60354A), // Mengubah warna saat disentuh
+                : Color(0xFF60354A), 
             width: barWidth,
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(8),

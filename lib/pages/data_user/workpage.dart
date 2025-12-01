@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:async';
 import 'datepicker.dart';
 import '../../helper/note_card.dart';
+import 'package:sleepys/helper/api_endpoints.dart';
 
 class Workpage extends StatelessWidget {
   final String email;
@@ -58,14 +59,14 @@ class _WorkpagesState extends State<Workpages> {
   Future<void> saveWork(String work) async {
     try {
       final response = await http.put(
-        Uri.parse('http://103.129.148.84/save-work/'),
+        ApiEndpoints.usersWork(widget.email),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(<String, String>{
           'name': widget.name,
           'email': widget.email,
-          'gender': widget.gender, // Send gender as string
+          'gender': widget.gender, 
           'work': work,
         }),
       );
@@ -102,7 +103,7 @@ class _WorkpagesState extends State<Workpages> {
 
   @override
   Widget build(BuildContext context) {
-    // MediaQuery for responsive sizing
+    
     final double deviceWidth = MediaQuery.of(context).size.width;
     final double titleFontSize = deviceWidth * 0.06;
     final double subtitleFontSize = deviceWidth * 0.04;

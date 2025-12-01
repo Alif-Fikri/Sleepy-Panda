@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:sleepys/helper/note_card.dart';
 import 'dart:convert';
 import 'package:sleepys/pages/data_user/sleeppage.dart';
+import 'package:sleepys/helper/api_endpoints.dart';
 
 class HeartRatePage extends StatefulWidget {
   final String email;
@@ -65,7 +66,7 @@ class _HeartRatePageState extends State<HeartRatePage> {
 
     try {
       final response = await http.put(
-        Uri.parse('http://103.129.148.84/save-heart-rate/'),
+        ApiEndpoints.usersMetrics(widget.email),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },

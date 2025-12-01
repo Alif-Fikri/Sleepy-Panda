@@ -26,11 +26,11 @@ class _SleepLineChart1State extends State<SleepLineChart1> {
 
         double fontSize = MediaQuery.of(context).size.width * 0.02;
 
-        // Menentukan nilai minY dan maxY sesuai dengan rentang 02:00 hingga 12:00
+        
         double minY = 2.0;
         double maxY = 12.0;
 
-        // Menyiapkan label jam untuk sumbu Y
+        
         List<double> yAxisLabels = [];
         for (double i = minY; i <= maxY; i += 2) {
           yAxisLabels.add(i);
@@ -181,11 +181,11 @@ class _SleepLineChart1State extends State<SleepLineChart1> {
       if (widget.data[i] != null) {
         double yValue = widget.data[i]!;
 
-        // Menyesuaikan yValue ke dalam rentang 02:00 hingga 12:00
+        
         if (yValue < 2.0) {
-          yValue = 2.0; // Menempatkan di jam 02:00 jika sebelum 02:00
+          yValue = 2.0; 
         } else if (yValue > 12.0) {
-          yValue = 12.0; // Menempatkan di jam 12:00 jika setelah 12:00
+          yValue = 12.0; 
         }
 
         print('Hari ke-$i: Adjusted yValue = $yValue');

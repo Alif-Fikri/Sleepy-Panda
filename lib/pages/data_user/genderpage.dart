@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sleepys/pages/data_user/workpage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:sleepys/helper/api_endpoints.dart';
 
 class Genderpage extends StatelessWidget {
   final String name;
@@ -34,7 +35,7 @@ class _GenderpagesState extends State<Genderpages> {
   void _onTap(int index) async {
     String gender = index == 1
         ? "0"
-        : "1"; // Ubah gender menjadi "0" untuk female dan "1" untuk male
+        : "1"; 
     await saveGender(widget.name, widget.email, gender);
 
     setState(() {
@@ -51,7 +52,7 @@ class _GenderpagesState extends State<Genderpages> {
       }
     });
 
-    // Delay selama 1 detik sebelum navigasi ke halaman berikutnya
+    
     await Future.delayed(Duration(seconds: 1));
 
     Navigator.pushReplacement(
@@ -66,9 +67,9 @@ class _GenderpagesState extends State<Genderpages> {
   Future<void> saveGender(String name, String email, String gender) async {
     try {
       print(
-          'Saving gender: $gender'); // Tambahkan logging untuk melihat nilai gender
-      final response = await http.put(
-        Uri.parse('http://103.129.148.84/save-gender/'),
+          'Saving gender: $gender'); 
+      final response = await http.patch(
+        ApiEndpoints.usersPatch(email),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -92,7 +93,7 @@ class _GenderpagesState extends State<Genderpages> {
 
   @override
   Widget build(BuildContext context) {
-    // MediaQuery for responsive sizing
+    
     final double deviceWidth = MediaQuery.of(context).size.width;
     final double titleFontSize = deviceWidth * 0.06;
     final double subtitleFontSize = deviceWidth * 0.04;

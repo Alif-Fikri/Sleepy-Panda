@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart'; // Import the intl package
+import 'package:intl/intl.dart'; 
 import 'package:sleepys/helper/card_sleepprofile.dart';
+import 'package:sleepys/helper/api_endpoints.dart';
 
 class DailyPage extends StatefulWidget {
   final String email;
@@ -23,8 +24,9 @@ class _DailyPageState extends State<DailyPage> {
   }
 
   Future<List<Map<String, dynamic>>> getSleepData(String email) async {
-    final url = Uri.parse('http://103.129.148.84/get-sleep-records/$email');
-    final response = await http.get(url);
+    final response = await http.get(
+      ApiEndpoints.sleepRecordsByEmail(email),
+    );
 
     if (response.statusCode == 200) {
       return List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -45,10 +47,10 @@ class _DailyPageState extends State<DailyPage> {
         DateTime wakeUpDateTime =
             calculateWakeUpDateTime(record['date'], timeRange);
 
-        // Check if the current time has reached or passed the wake-up time
+        
         if (DateTime.now().isAfter(wakeUpDateTime)) {
           filteredData.add(
-              record); // Only add records if the current time has reached the wake-up time
+              record); 
         }
       }
 
@@ -72,12 +74,12 @@ class _DailyPageState extends State<DailyPage> {
   DateTime calculateWakeUpDateTime(String date, String timeRange) {
     try {
       final wakeUpTimeString =
-          timeRange.split(' - ')[1]; // Get the wake-up time
+          timeRange.split(' - ')[1]; 
       DateTime wakeUpTime = DateFormat('HH:mm').parse(wakeUpTimeString);
 
       DateTime sleepDate = DateFormat('d MMMM yyyy').parse(date);
 
-      // Adjust the date if the wake-up time is earlier than the sleep time
+      
       if (wakeUpTime.isBefore(parseTime(timeRange))) {
         sleepDate = sleepDate.add(Duration(days: 1));
       }
@@ -133,6 +135,22 @@ class _DailyPageState extends State<DailyPage> {
                   email: widget.email,
                   hasSleepData: hasSleepData,
                 ),
+                if (!hasSleepData)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: Center(
+                      child: Text(
+                        'Belum ada catatan tidur untuk hari ini.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontFamily: 'Urbanist',
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
                 ...data.map((record) => SleepEntry(
                       date: record['date'] ?? 'Tanggal tidak tersedia',
                       duration: record['duration'] ?? 'Durasi tidak tersedia',
@@ -151,7 +169,7 @@ class _DailyPageState extends State<DailyPage> {
                 ),
                 Center(
                   child: Text(
-                    'Tidak ada data tidur yang ditemukan.',
+                    'Belum ada catatan tidur untuk hari ini.',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,

@@ -7,7 +7,7 @@ class NoteCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // MediaQuery for responsive sizing
+    
     final double deviceWidth = MediaQuery.of(context).size.width;
     final double textFontSize = deviceWidth * 0.035;
     final double iconSize = deviceWidth * 0.045;

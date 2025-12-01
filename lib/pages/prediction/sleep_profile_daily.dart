@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:sleepys/pages/prediction/prediction.dart';
+import 'package:sleepys/helper/api_endpoints.dart';
 
 class SleepProfileDaily extends StatelessWidget {
   final String email;
@@ -10,9 +11,9 @@ class SleepProfileDaily extends StatelessWidget {
 
   Future<void> getPrediction(BuildContext context) async {
     try {
-      final url = Uri.parse('http://103.129.148.84/predict');
+      final url = ApiEndpoints.predictionsRun();
 
-      // Kirim POST request dengan email dalam body
+      
       final response = await http.post(
         url,
         headers: {
@@ -27,10 +28,10 @@ class SleepProfileDaily extends StatelessWidget {
         final data = json.decode(response.body);
         final prediction = data['prediction'];
 
-        // Panggil fungsi untuk menyimpan hasil prediksi ke database
+        
         await savePrediction(context, email, prediction);
 
-        // Navigasi berdasarkan hasil prediksi
+        
         if (prediction == 'Normal') {
           Navigator.push(
               context,
@@ -47,22 +48,22 @@ class SleepProfileDaily extends StatelessWidget {
               MaterialPageRoute(
                   builder: (context) => InsomniaPage(email: email)));
         } else {
-          // Tidak ada tindakan lain jika hasil prediksi tidak dikenali
+          
         }
       } else {
-        // Gagal mendapatkan prediksi dari API, tidak ada tindakan lain
+        
       }
     } catch (e) {
-      // Error handling, tidak ada tindakan lain
+      
     }
   }
 
   Future<void> savePrediction(
       BuildContext context, String email, String prediction) async {
     try {
-      final url = Uri.parse('http://103.129.148.84/save_prediction');
+      final url = ApiEndpoints.predictionsSave();
 
-      // Map prediksi ke dalam bentuk integer
+      
       int predictionResult;
       if (prediction == 'Insomnia') {
         predictionResult = 0;
@@ -74,7 +75,7 @@ class SleepProfileDaily extends StatelessWidget {
         return;
       }
 
-      // Kirim POST request dengan email dan prediction_result dalam body
+      
       final response = await http.post(
         url,
         headers: {
@@ -87,19 +88,19 @@ class SleepProfileDaily extends StatelessWidget {
       );
 
       if (response.statusCode == 200) {
-        // Prediction saved successfully
+        
       } else {
-        // Failed to save prediction, tidak ada tindakan lain
+        
       }
     } catch (e) {
-      // Error handling, tidak ada tindakan lain
+      
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF20223F), // Set background color to dark blue
+      backgroundColor: Color(0xFF20223F), 
       body: LayoutBuilder(
         builder: (context, constraints) {
           double padding = constraints.maxWidth * 0.10;
@@ -149,7 +150,7 @@ class SleepProfileDaily extends StatelessWidget {
                           getPrediction(context);
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF00A99D), // Button color
+                          backgroundColor: Color(0xFF00A99D), 
                           padding: EdgeInsets.symmetric(
                               horizontal: 24, vertical: 12),
                           shape: RoundedRectangleBorder(

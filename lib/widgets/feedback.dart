@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:sleepys/helper/api_endpoints.dart';
 
 class FeedbackPage extends StatefulWidget {
   @override
@@ -26,8 +27,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
         _isSubmitting = true;
       });
 
-      final url = Uri.parse(
-          'http://103.129.148.84/submit-feedback/'); // Replace with your backend URL
+      final url = ApiEndpoints.feedback();
 
       try {
         final response = await http.post(

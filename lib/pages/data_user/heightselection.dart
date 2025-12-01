@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:async';
 import 'weightpage.dart';
 import 'package:sleepys/helper/note_card.dart';
+import 'package:sleepys/helper/api_endpoints.dart';
 
 class HeightSelection extends StatelessWidget {
   final String name;
@@ -23,15 +24,12 @@ class HeightSelection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: HeightSelectionPage(
-        name: name,
-        email: email,
-        gender: gender,
-        work: work,
-        date_of_birth: date_of_birth,
-      ),
+    return HeightSelectionPage(
+      name: name,
+      email: email,
+      gender: gender,
+      work: work,
+      date_of_birth: date_of_birth,
     );
   }
 }
@@ -57,21 +55,28 @@ class HeightSelectionPage extends StatefulWidget {
 }
 
 class _HeightSelectionPageState extends State<HeightSelectionPage> {
-  FixedExtentScrollController _controller = FixedExtentScrollController();
-  int selectedItem = 0;
+  final FixedExtentScrollController _controller = FixedExtentScrollController();
+  int selectedItem = 100;
   Timer? _timer;
+  bool _isNavigating = false;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedItem = 100;
+  }
 
   @override
   void dispose() {
     _timer?.cancel();
+    _controller.dispose();
     super.dispose();
   }
 
   Future<void> saveHeight(int height) async {
     try {
-      final response = await http.put(
-        Uri.parse(
-            'http://103.129.148.84/save-height/'), // Ubah URL sesuai kebutuhan
+      final response = await http.patch(
+        ApiEndpoints.usersPatch(widget.email),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -105,10 +110,18 @@ class _HeightSelectionPageState extends State<HeightSelectionPage> {
 
   void _resetTimer() {
     _timer?.cancel();
-    _timer = Timer(Duration(seconds: 3), () {
-      saveHeight(selectedItem).then((_) {
-        Navigator.pushReplacement(
-          context,
+    _timer = Timer(const Duration(seconds: 3), () async {
+      if (!mounted || _isNavigating) {
+        return;
+      }
+      _isNavigating = true;
+      final int height = selectedItem;
+      try {
+        await saveHeight(height);
+        if (!mounted) {
+          return;
+        }
+        Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => Weightpage(
               name: widget.name,
@@ -116,20 +129,21 @@ class _HeightSelectionPageState extends State<HeightSelectionPage> {
               gender: widget.gender,
               work: widget.work,
               date_of_birth: widget.date_of_birth,
-              height: selectedItem,
+              height: height,
               userEmail: widget.email,
             ),
           ),
         );
-      }).catchError((error) {
+      } catch (error) {
         print('Error: $error');
-      });
+      } finally {
+        _isNavigating = false;
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // MediaQuery for responsive sizing
     final double deviceWidth = MediaQuery.of(context).size.width;
     final double titleFontSize = deviceWidth * 0.06;
     final double subtitleFontSize = deviceWidth * 0.045;
@@ -217,8 +231,7 @@ class _HeightSelectionPageState extends State<HeightSelectionPage> {
                                   ),
                                 );
                               },
-                              childCount:
-                                  200, // This gives a range from 100 cm to 299 cm
+                              childCount: 200,
                             ),
                           ),
                         ),

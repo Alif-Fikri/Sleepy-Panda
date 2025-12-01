@@ -22,9 +22,9 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _widgetOptions = <Widget>[
-      JurnalTidurPage(email: widget.userEmail), // Page for Jurnal Tidur
-      Bloodpressure(email: widget.userEmail), // Page for Blood Pressure
-      ProfilePage(email: widget.userEmail), // Page for Profile
+      JurnalTidurPage(email: widget.userEmail), 
+      Bloodpressure(email: widget.userEmail), 
+      ProfilePage(email: widget.userEmail), 
     ];
   }
 
@@ -160,9 +160,9 @@ class _JurnalTidurPageState extends State<JurnalTidurPage>
       body: TabBarView(
         controller: _tabController,
         children: [
-          DailyPage(email: widget.email), // Corrected email reference
-          WeekPage(email: widget.email), // Corrected email reference
-          MonthPage(email: widget.email), // Corrected email reference
+          DailyPage(email: widget.email), 
+          WeekPage(email: widget.email), 
+          MonthPage(email: widget.email), 
         ],
       ),
     );

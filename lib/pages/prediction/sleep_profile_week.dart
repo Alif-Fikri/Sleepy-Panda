@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:sleepys/pages/prediction/prediction.dart';
+import 'package:sleepys/helper/api_endpoints.dart';
 
 class SleepProfileWeek extends StatelessWidget {
   final String email;
@@ -10,9 +11,9 @@ class SleepProfileWeek extends StatelessWidget {
 
   Future<void> getPrediction(BuildContext context) async {
     try {
-      final url = Uri.parse('http://103.129.148.84/weekly_predict');
+      final url = ApiEndpoints.predictionsWeekly();
 
-      // Kirim POST request dengan email dalam body
+      
       final response = await http.post(
         url,
         headers: {
@@ -27,10 +28,10 @@ class SleepProfileWeek extends StatelessWidget {
         final data = json.decode(response.body);
         final prediction = data['weekly_prediction'];
 
-        // Panggil fungsi untuk menyimpan hasil prediksi ke database
+        
         await savePrediction(context, email, prediction);
 
-        // Navigasi berdasarkan hasil prediksi
+        
         if (prediction == 'Normal') {
           Navigator.push(
               context,
@@ -49,24 +50,24 @@ class SleepProfileWeek extends StatelessWidget {
         }
       }
     } catch (e) {
-      // Handle errors silently or with a custom error handler if needed
+      
     }
   }
 
   Future<void> savePrediction(
       BuildContext context, String email, String prediction) async {
     try {
-      // Use the correct URL for your server
-      final url = Uri.parse('http://103.129.148.84/save_prediction_week');
+      
+      final url = ApiEndpoints.predictionsWeeklySave();
 
-      // Map string prediction results to integer values
+      
       int predictionResult;
       if (prediction == 'Insomnia') {
-        predictionResult = 0; // Example: 1 for Insomnia
+        predictionResult = 0; 
       } else if (prediction == 'Normal') {
-        predictionResult = 1; // Example: 0 for Normal
+        predictionResult = 1; 
       } else if (prediction == 'Sleep Apnea') {
-        predictionResult = 2; // Example: 2 for Sleep Apnea
+        predictionResult = 2; 
       } else {
         return;
       }
@@ -78,22 +79,22 @@ class SleepProfileWeek extends StatelessWidget {
         },
         body: json.encode({
           'email': email,
-          'prediction_result': predictionResult, // Send integer
+          'prediction_result': predictionResult, 
         }),
       );
 
       if (response.statusCode == 200) {
-        // Handle successful save if needed
+        
       }
     } catch (e) {
-      // Handle errors silently or with a custom error handler if needed
+      
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF20223F), // Set background color to dark blue
+      backgroundColor: Color(0xFF20223F), 
       body: LayoutBuilder(
         builder: (context, constraints) {
           double padding = constraints.maxWidth * 0.10;
@@ -143,7 +144,7 @@ class SleepProfileWeek extends StatelessWidget {
                           getPrediction(context);
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF00A99D), // Button color
+                          backgroundColor: Color(0xFF00A99D), 
                           padding: EdgeInsets.symmetric(
                               horizontal: 24, vertical: 12),
                           shape: RoundedRectangleBorder(

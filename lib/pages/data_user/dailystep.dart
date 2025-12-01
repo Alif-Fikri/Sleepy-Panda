@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:sleepys/pages/data_user/heartrate.dart';
+import 'package:sleepys/helper/api_endpoints.dart';
 
 class Dailystep extends StatefulWidget {
   final String email;
@@ -64,7 +65,7 @@ class _DailystepState extends State<Dailystep> {
 
     try {
       final response = await http.put(
-        Uri.parse('http://103.129.148.84/save-daily-steps/'),
+        ApiEndpoints.usersMetrics(widget.email),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -95,16 +96,16 @@ class _DailystepState extends State<Dailystep> {
 
   @override
   Widget build(BuildContext context) {
-    // Get the width and height of the screen
+    
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
-    // Define adaptive font sizes based on screen width
+    
     double fontSizeTitle = screenWidth * 0.06;
     double fontSizeSubtitle = screenWidth * 0.045;
     double fontSizeButton = screenWidth * 0.04;
 
-    // Define adaptive padding and spacing
+    
     double verticalPadding = screenHeight * 0.02;
     double horizontalPadding = screenWidth * 0.05;
 
@@ -120,26 +121,26 @@ class _DailystepState extends State<Dailystep> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: verticalPadding), // Adjusted spacing
+            SizedBox(height: verticalPadding), 
             Text(
               'Saya ingin tau tentang kamu,',
               style: TextStyle(
                 fontFamily: 'Urbanist',
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
-                fontSize: fontSizeTitle, // Adjusted font size
+                fontSize: fontSizeTitle, 
               ),
             ),
-            SizedBox(height: verticalPadding * 0.5), // Adjusted spacing
+            SizedBox(height: verticalPadding * 0.5), 
             Text(
               'Berapa jumlah langkah hari ini?',
               style: TextStyle(
                 fontFamily: 'Urbanist',
-                fontSize: fontSizeSubtitle, // Adjusted font size
+                fontSize: fontSizeSubtitle, 
                 color: Colors.white,
               ),
             ),
-            SizedBox(height: verticalPadding), // Adjusted spacing
+            SizedBox(height: verticalPadding), 
             Row(
               children: [
                 Expanded(
@@ -184,16 +185,16 @@ class _DailystepState extends State<Dailystep> {
             Expanded(
               child: Center(
                 child: Container(
-                  height: screenHeight * 0.07, // Adjusted button height
-                  width: screenWidth * 0.8, // Adjusted button width
+                  height: screenHeight * 0.07, 
+                  width: screenWidth * 0.8, 
                   child: ElevatedButton(
                     onPressed: _isButtonEnabled ? _saveAndNavigate : null,
                     child: Text('Next'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF009090), // Button color
+                      backgroundColor: Color(0xFF009090), 
                       textStyle: TextStyle(
                         fontFamily: 'Urbanist',
-                        fontSize: fontSizeButton, // Adjusted font size
+                        fontSize: fontSizeButton, 
                       ),
                       foregroundColor: Colors.white,
                     ),

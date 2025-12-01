@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 import 'package:sleepys/pages/home.dart';
+import 'package:sleepys/helper/api_endpoints.dart';
 
 class AlarmScreen extends StatefulWidget {
   final String wakeUpTime;
@@ -23,7 +24,6 @@ class _AlarmScreenState extends State<AlarmScreen>
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-  double _dragOffset = 0.0;
   late AnimationController _controller;
   late Animation<double> _animation;
   late Animation<Color?> _colorAnimation;
@@ -44,7 +44,7 @@ class _AlarmScreenState extends State<AlarmScreen>
 
     _initNotification();
     _updateTime();
-    _fetchUserName(); // Fetch the user's name
+    _fetchUserName(); 
   }
 
   @override
@@ -119,8 +119,9 @@ class _AlarmScreenState extends State<AlarmScreen>
 
   Future<void> _fetchUserName() async {
     try {
-      final response = await http
-          .get(Uri.parse('http://103.129.148.84/user/${widget.email}'));
+      final response = await http.get(
+        ApiEndpoints.usersByEmail(widget.email),
+      );
 
       if (response.statusCode == 200) {
         final user = json.decode(response.body);

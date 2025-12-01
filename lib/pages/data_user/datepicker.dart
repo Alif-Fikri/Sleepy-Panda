@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
 import 'heightselection.dart';
+import 'package:sleepys/helper/api_endpoints.dart';
 
 class Datepicker extends StatelessWidget {
   final String name;
@@ -50,20 +51,20 @@ class Datepickers extends StatefulWidget {
 }
 
 class _DatepickersState extends State<Datepickers> {
-  DateTime selectedDate = DateTime.now(); // Default date
+  DateTime selectedDate = DateTime.now(); 
 
   Future<void> saveDateOfBirth(String dateofbirth) async {
     try {
-      final response = await http.put(
-        Uri.parse('http://103.129.148.84/save-dob/'),
+      final response = await http.patch(
+        ApiEndpoints.usersPatch(widget.email),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(<String, dynamic>{
-          // Ubah di sini menjadi dynamic agar gender bisa integer
+          
           'name': widget.name,
           'email': widget.email,
-          'gender': widget.gender, // Ubah string gender menjadi integer
+          'gender': widget.gender, 
           'work': widget.work,
           'date_of_birth': dateofbirth,
         }),
@@ -142,7 +143,7 @@ class _DatepickersState extends State<Datepickers> {
                               "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
                           await saveDateOfBirth(formattedDate);
                           await Future.delayed(
-                              const Duration(seconds: 2)); // Menunggu 2 detik
+                              const Duration(seconds: 2)); 
 
                           Navigator.pushReplacement(
                             context,

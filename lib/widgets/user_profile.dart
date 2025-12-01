@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:sleepys/helper/ProfileImageProvider.dart';
 import 'package:provider/provider.dart';
+import 'package:sleepys/helper/api_endpoints.dart';
 
 class Userprofile extends StatefulWidget {
   final String email;
@@ -35,46 +36,45 @@ class _UserprofileState extends State<Userprofile> {
     getUserData();
   }
 
-Future<void> _pickImage() async {
-  final pickedFile = await widget._picker.pickImage(
-    source: ImageSource.gallery,
-  );
+  Future<void> _pickImage() async {
+    final pickedFile = await widget._picker.pickImage(
+      source: ImageSource.gallery,
+    );
 
-  if (pickedFile != null) {
-    setState(() {
-      _image = File(pickedFile.path);
-    });
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
 
-    // Simpan path gambar ke SharedPreferences
+      
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('${widget.email}_profile_image', pickedFile.path);
+    }
+  }
+
+  Future<void> getUserData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('${widget.email}_profile_image', pickedFile.path);
-  }
-}
+    final token = prefs.getString('token');
 
+    
+    final imagePath = prefs.getString('${widget.email}_profile_image');
+    if (imagePath != null) {
+      setState(() {
+        _image = File(imagePath);
+      });
+    }
 
-Future<void> getUserData() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  final token = prefs.getString('token');
-
-  // Ambil path gambar dari SharedPreferences
-  final imagePath = prefs.getString('${widget.email}_profile_image');
-  if (imagePath != null) {
-    setState(() {
-      _image = File(imagePath);
-    });
-  }
-
-  if (token == null) {
-    print('No token found');
-    setState(() {
-      isLoading = false;
-    });
-    return;
-  }
+    if (token == null) {
+      print('No token found');
+      setState(() {
+        isLoading = false;
+      });
+      return;
+    }
 
     try {
       final response = await http.get(
-        Uri.parse('http://103.129.148.84/user-profile?email=${widget.email}'),
+        ApiEndpoints.usersByEmail(widget.email),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $token',
@@ -83,13 +83,13 @@ Future<void> getUserData() async {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        print('Response Data: $data'); // Tambahkan ini untuk debug
+        print('Response Data: $data'); 
 
         setState(() {
           nameController.text = data['name'] ?? 'N/A';
           emailController.text = widget.email;
 
-          // Convert gender to a string
+          
           if (data['gender'] != null) {
             selectedGender = data['gender'] == 1 ? 'male' : 'female';
           } else {
@@ -125,7 +125,7 @@ Future<void> getUserData() async {
     });
 
     try {
-      // Get token from SharedPreferences
+      
       SharedPreferences prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('token');
 
@@ -137,17 +137,17 @@ Future<void> getUserData() async {
         return;
       }
 
-      final response = await http.put(
-        Uri.parse('http://103.129.148.84/user-profile/update'),
+      final response = await http.patch(
+        ApiEndpoints.usersPatch(widget.email),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $token',
         },
         body: jsonEncode(<String, dynamic>{
-          // Use dynamic to handle int values
+          
           'email': widget.email,
           'name': nameController.text,
-          'gender': selectedGender == 'male' ? 1 : 0, // Convert back to int
+          'gender': selectedGender == 'male' ? 1 : 0, 
           'date_of_birth': DateFormat('yyyy-MM-dd')
               .format(DateFormat('dd/MM/yyyy').parse(dobController.text)),
         }),
@@ -217,17 +217,17 @@ Future<void> getUserData() async {
                 children: [
                   Container(
                     width:
-                        screenSize.width * 0.2, // Atur ukuran sesuai keinginan
+                        screenSize.width * 0.2, 
                     height: screenSize.width * 0.2,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color:
-                          Colors.grey, // Warna background jika gambar tidak ada
+                          Colors.grey, 
                       image: _image != null
                           ? DecorationImage(
                               image: FileImage(_image!),
                               fit: BoxFit
-                                  .cover, // Ganti dengan BoxFit.contain untuk mengurangi zoom
+                                  .cover, 
                             )
                           : null,
                     ),
@@ -242,7 +242,7 @@ Future<void> getUserData() async {
 
                   SizedBox(
                       height:
-                          10), // Beri sedikit jarak antara avatar dan tombol
+                          10), 
                   GestureDetector(
                     onTap: () {
                       _pickImage();
@@ -322,7 +322,7 @@ Future<void> getUserData() async {
                 controller: controller,
                 textInputAction: TextInputAction.done,
                 onSubmitted: (value) {},
-                readOnly: label == 'Email', // Make email non-editable
+                readOnly: label == 'Email', 
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Color(0xFF272E49),
@@ -389,7 +389,7 @@ Future<void> getUserData() async {
               width: screenSize.width * 0.875,
               height: screenSize.height * 0.06875,
               child: DropdownButtonFormField<String>(
-                value: selectedGender, // Ensure this is correctly set
+                value: selectedGender, 
                 hint: Text(
                   'Pilih Gender',
                   style: TextStyle(color: Colors.white),

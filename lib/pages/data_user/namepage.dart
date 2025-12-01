@@ -2,77 +2,78 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'genderpage.dart';
+import 'package:sleepys/helper/api_endpoints.dart';
 
 class Namepage extends StatelessWidget {
   final String email;
   final TextEditingController _controller = TextEditingController();
 
-  Namepage({Key? key, required this.email}) : super(key: key);
+  Namepage({super.key, required this.email});
 
-  // Fungsi untuk memvalidasi nama
+  
   bool isValidName(String name) {
     return name.isNotEmpty &&
-        name.length >= 3; // Nama harus tidak kosong dan minimal  karakter
+        name.length >= 3; 
   }
 
   void showCustomSnackBar(BuildContext context, String message) {
     final screenSize = MediaQuery.of(context).size;
 
-    // SnackBar kustom yang meniru gaya login dan register
+    
     final snackBar = SnackBar(
       backgroundColor:
-          Colors.transparent, // Background transparan untuk efek floating
-      elevation: 0, // Menghilangkan elevasi untuk tampilan datar
+          Colors.transparent, 
+      elevation: 0, 
       content: Container(
         padding: EdgeInsets.symmetric(
-          vertical: screenSize.height * 0.02, // Padding vertikal dinamis
-          horizontal: screenSize.width * 0.05, // Padding horizontal dinamis
+          vertical: screenSize.height * 0.02, 
+          horizontal: screenSize.width * 0.05, 
         ),
         decoration: BoxDecoration(
           color: const Color(
-              0xFF272E49), // Warna latar belakang sesuai desain login/register
+              0xFF272E49), 
           borderRadius:
-              BorderRadius.circular(screenSize.width * 0.03), // Sudut membulat
+              BorderRadius.circular(screenSize.width * 0.03), 
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1), // Bayangan halus
+              color: Colors.black.withOpacity(0.1), 
               blurRadius: 10,
               offset: const Offset(0, 5),
             ),
           ],
         ),
         child: Row(
-          mainAxisSize: MainAxisSize.min, // Row akan menyesuaikan sesuai konten
+          mainAxisSize: MainAxisSize.min, 
           children: [
             Icon(
               Icons
-                  .error_outline, // Ikon sesuai desain snack bar error di login/register
-              color: Colors.redAccent, // Warna ikon merah untuk pesan kesalahan
-              size: screenSize.width * 0.05, // Ukuran ikon dinamis
+                  .error_outline, 
+              color: Colors.redAccent, 
+              size: screenSize.width * 0.05, 
             ),
             SizedBox(
-                width: screenSize.width * 0.03), // Jarak antara ikon dan teks
+                width: screenSize.width * 0.03), 
             Expanded(
               child: Text(
                 message,
                 style: TextStyle(
-                  color: Colors.white, // Warna teks putih
-                  fontFamily: 'Urbanist', // Menggunakan font yang konsisten
-                  fontSize: screenSize.width * 0.035, // Ukuran font dinamis
+                  color: Colors.white, 
+                  fontFamily: 'Urbanist', 
+                  fontSize: screenSize.width * 0.035, 
                 ),
               ),
             ),
           ],
         ),
       ),
-      behavior: SnackBarBehavior.floating, // SnackBar mengapung di atas konten
+      behavior: SnackBarBehavior.floating, 
       margin: EdgeInsets.symmetric(
-        vertical: screenSize.height * 0.02, // Margin vertikal dinamis
-        horizontal: screenSize.width * 0.04, // Margin horizontal dinamis
+        vertical: screenSize.height * 0.02, 
+        horizontal: screenSize.width * 0.04, 
       ),
     );
 
-    // Menampilkan SnackBar menggunakan ScaffoldMessenger
+    
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
@@ -83,8 +84,8 @@ class Namepage extends StatelessWidget {
     }
 
     try {
-      final response = await http.put(
-        Uri.parse('http://103.129.148.84/save-name/'),
+      final response = await http.patch(
+        ApiEndpoints.usersPatch(email),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -96,7 +97,7 @@ class Namepage extends StatelessWidget {
 
       if (response.statusCode == 200) {
         print('Name saved successfully: ${jsonDecode(response.body)}');
-        // Navigasi ke halaman berikutnya setelah menyimpan nama
+        
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -109,7 +110,7 @@ class Namepage extends StatelessWidget {
       }
     } catch (error) {
       print('Error: $error');
-      // Tampilkan error ke pengguna, misalnya menggunakan Snackbar
+      
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Gagal menyimpan nama. Silakan coba lagi.'),
@@ -121,7 +122,7 @@ class Namepage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // MediaQuery for responsive sizing
+    
     final double deviceWidth = MediaQuery.of(context).size.width;
     final double titleFontSize = deviceWidth * 0.06;
     final double subtitleFontSize = deviceWidth * 0.04;
@@ -169,7 +170,7 @@ class Namepage extends StatelessWidget {
                         textInputAction: TextInputAction.done,
                         onSubmitted: (value) {
                           String name =
-                              _controller.text.trim(); // Trim whitespace
+                              _controller.text.trim(); 
                           saveName(context, name, email);
                         },
                         decoration: InputDecoration(

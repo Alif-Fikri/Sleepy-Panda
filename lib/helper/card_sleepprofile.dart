@@ -32,7 +32,7 @@ class DailySleepProfile extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 5),
-              if (hasSleepData) // Show the button only if the user has sleep data
+              if (hasSleepData) 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -74,7 +74,7 @@ class DailySleepProfile extends StatelessWidget {
 
 class WeeklySleepProfile extends StatelessWidget {
   final String email;
-  final bool hasSleepData; // Add this flag to control button visibility
+  final bool hasSleepData; 
 
   WeeklySleepProfile({required this.email, required this.hasSleepData});
 
@@ -101,7 +101,7 @@ class WeeklySleepProfile extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 5),
-              if (hasSleepData) // Show the button only if the user has sleep data
+              if (hasSleepData) 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -143,7 +143,7 @@ class WeeklySleepProfile extends StatelessWidget {
 
 class MonthlySleepProfile extends StatelessWidget {
   final String email;
-  final bool hasSleepData; // Add this flag to control button visibility
+  final bool hasSleepData; 
 
   MonthlySleepProfile({required this.email, required this.hasSleepData});
 
@@ -170,7 +170,7 @@ class MonthlySleepProfile extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 5),
-              if (hasSleepData) // Show the button only if the user has sleep data
+              if (hasSleepData) 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [

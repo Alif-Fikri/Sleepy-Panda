@@ -15,9 +15,9 @@ class _MonthLineChart1State extends State<MonthLineChart1> {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      double chartWidth = constraints.maxWidth * 0.9; // 90% of available width
+      double chartWidth = constraints.maxWidth * 0.9; 
       double chartHeight =
-          constraints.maxHeight * 0.5; // 50% of available height
+          constraints.maxHeight * 0.5; 
 
       if (constraints.maxHeight.isInfinite) {
         chartHeight = 200;
@@ -25,21 +25,21 @@ class _MonthLineChart1State extends State<MonthLineChart1> {
 
       double fontSize = MediaQuery.of(context).size.width * 0.02;
 
-      // Set minY and maxY to match the range from 06:00 to 12:00
+      
       double minY = 2.0;
       double maxY = 12.0;
 
-      // Generate the list of hours based on minY and maxY with a 1-hour interval
+      
       List<double> yAxisLabels = [];
       for (double i = minY; i <= maxY; i += 1) {
         yAxisLabels.add(i);
       }
 
       return Padding(
-        padding: const EdgeInsets.all(16), // Add padding for better spacing
+        padding: const EdgeInsets.all(16), 
         child: SizedBox(
-          width: chartWidth, // Adjust the width as needed
-          height: chartHeight, // Adjust the height as needed
+          width: chartWidth, 
+          height: chartHeight, 
           child: LineChart(
             LineChartData(
               gridData: FlGridData(
@@ -77,7 +77,7 @@ class _MonthLineChart1State extends State<MonthLineChart1> {
 
                       return Padding(
                         padding: const EdgeInsets.only(
-                            left: 15.0), // Adjust this value as needed
+                            left: 15.0), 
                         child: Text(
                           weekText,
                           style: TextStyle(
@@ -94,7 +94,7 @@ class _MonthLineChart1State extends State<MonthLineChart1> {
                   sideTitles: SideTitles(
                     showTitles: true,
                     reservedSize: 40,
-                    interval: 2, // Show every hour
+                    interval: 2, 
                     getTitlesWidget: (value, meta) {
                       if (!yAxisLabels.contains(value)) return Container();
 
@@ -116,10 +116,10 @@ class _MonthLineChart1State extends State<MonthLineChart1> {
                   ),
                 ),
                 topTitles: AxisTitles(
-                  sideTitles: SideTitles(showTitles: false), // Hide top titles
+                  sideTitles: SideTitles(showTitles: false), 
                 ),
                 rightTitles: AxisTitles(
-                  sideTitles: SideTitles(showTitles: false), // Hide right titles
+                  sideTitles: SideTitles(showTitles: false), 
                 ),
               ),
               borderData: FlBorderData(
@@ -129,9 +129,9 @@ class _MonthLineChart1State extends State<MonthLineChart1> {
                 ),
               ),
               minX: 0,
-              maxX: 3, // 4 weeks (Week 0, Week 1, Week 2, Week 3)
-              minY: minY, // Set minY to 06:00
-              maxY: maxY, // Set maxY to 12:00
+              maxX: 3, 
+              minY: minY, 
+              maxY: maxY, 
               lineBarsData: [
                 LineChartBarData(
                   spots: _createSpots(),
@@ -191,15 +191,15 @@ class _MonthLineChart1State extends State<MonthLineChart1> {
       if (widget.data[i] != null) {
         double yValue = widget.data[i]!;
 
-        // Menyesuaikan yValue ke dalam rentang 02:00 hingga 12:00
+        
         if (yValue < 2.0) {
-          yValue = 2.0; // Menempatkan di jam 02:00 jika sebelum 02:00
+          yValue = 2.0; 
         } else if (yValue > 12.0) {
-          yValue = 12.0; // Menempatkan di jam 12:00 jika setelah 12:00
+          yValue = 12.0; 
         }
 
         print(
-            'Week $i: Adjusted yValue = $yValue'); // Debugging: see the yValue after adjustment
+            'Week $i: Adjusted yValue = $yValue'); 
         spots.add(FlSpot(i.toDouble(), yValue));
       }
     }

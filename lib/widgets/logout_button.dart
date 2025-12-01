@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:sleepys/authentication/loginpage.dart';
+import 'package:sleepys/helper/api_endpoints.dart';
 
 class LogoutButton extends StatelessWidget {
   final Size screenSize;
@@ -13,21 +14,23 @@ class LogoutButton extends StatelessWidget {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
 
-    // Hapus token dari SharedPreferences
+    
     await prefs.remove('token');
 
-    // Panggil endpoint logout di server
-    final url = Uri.parse(
-        'http://103.129.148.84/logout/'); // Ganti dengan URL yang sesuai
+    
     final response = await http.post(
-      url,
+      ApiEndpoints.authLogout(),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
       },
     );
 
-    // Navigate to Login Page
+    if (response.statusCode >= 400) {
+      debugPrint('Logout failed: ${response.statusCode} - ${response.body}');
+    }
+
+    
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => LoginPages()),
@@ -48,7 +51,7 @@ class LogoutButton extends StatelessWidget {
       ),
     );
 
-    // Check the result and if confirmed, proceed with the logout
+    
     if (result.isTapConfirmButton) {
       _logout(context);
     }

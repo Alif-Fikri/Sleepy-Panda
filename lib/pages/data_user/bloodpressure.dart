@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:sleepys/pages/data_user/dailystep.dart';
+import 'package:sleepys/helper/api_endpoints.dart';
 
 class Bloodpressure extends StatefulWidget {
   final String email;
@@ -14,7 +15,7 @@ class Bloodpressure extends StatefulWidget {
 class _BloodpressureState extends State<Bloodpressure> {
   TextEditingController _upperPressureController = TextEditingController();
   TextEditingController _lowerPressureController = TextEditingController();
-  bool _isButtonEnabled = false; // Flag to check if button should be enabled
+  bool _isButtonEnabled = false; 
 
   @override
   void initState() {
@@ -72,7 +73,7 @@ class _BloodpressureState extends State<Bloodpressure> {
 
     try {
       final response = await http.put(
-        Uri.parse('http://103.129.148.84/save-blood-pressure/'),
+        ApiEndpoints.usersMetrics(widget.email),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -103,15 +104,11 @@ class _BloodpressureState extends State<Bloodpressure> {
     });
   }
 
-  void _skipAndNavigate() {
-    _navigateToSleepPage();
-  }
-
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
-    final double padding = screenWidth * 0.05; // 5% of screen width as padding
+    final double padding = screenWidth * 0.05; 
 
     return Scaffold(
       appBar: AppBar(
@@ -127,30 +124,30 @@ class _BloodpressureState extends State<Bloodpressure> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: screenHeight * 0.02), // Add top spacing
+                  SizedBox(height: screenHeight * 0.02), 
                   Text(
                     'Saya ingin tahu tentang kamu,',
                     style: TextStyle(
                       fontFamily: 'Urbanist',
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
-                      fontSize: screenWidth * 0.06, // Scalable font size
+                      fontSize: screenWidth * 0.06, 
                     ),
                   ),
                   SizedBox(
                       height:
-                          screenHeight * 0.01), // Add spacing between the texts
+                          screenHeight * 0.01), 
                   Text(
                     'Berapa tekanan darah kamu seminggu terakhir?',
                     style: TextStyle(
                       fontFamily: 'Urbanist',
-                      fontSize: screenWidth * 0.045, // Scalable font size
+                      fontSize: screenWidth * 0.045, 
                       color: Colors.white,
                     ),
                   ),
                   SizedBox(
                       height: screenHeight *
-                          0.03), // Add spacing before input fields
+                          0.03), 
                   Row(
                     children: [
                       Expanded(
@@ -167,7 +164,7 @@ class _BloodpressureState extends State<Bloodpressure> {
                               color: Colors.white,
                               fontFamily: 'Urbanist',
                               fontSize:
-                                  screenWidth * 0.04, // Scalable hint text
+                                  screenWidth * 0.04, 
                             ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
@@ -177,13 +174,13 @@ class _BloodpressureState extends State<Bloodpressure> {
                           style: TextStyle(
                             color: Colors.white,
                             fontFamily: 'Urbanist',
-                            fontSize: screenWidth * 0.045, // Scalable text size
+                            fontSize: screenWidth * 0.045, 
                           ),
                         ),
                       ),
                       SizedBox(
                           width: screenWidth *
-                              0.02), // Add spacing between field and buttons
+                              0.02), 
                       Column(
                         children: [
                           IconButton(
@@ -202,7 +199,7 @@ class _BloodpressureState extends State<Bloodpressure> {
                   ),
                   SizedBox(
                       height: screenHeight *
-                          0.02), // Add spacing between input fields
+                          0.02), 
                   Row(
                     children: [
                       Expanded(
@@ -219,7 +216,7 @@ class _BloodpressureState extends State<Bloodpressure> {
                               color: Colors.white,
                               fontFamily: 'Urbanist',
                               fontSize:
-                                  screenWidth * 0.04, // Scalable hint text
+                                  screenWidth * 0.04, 
                             ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
@@ -229,13 +226,13 @@ class _BloodpressureState extends State<Bloodpressure> {
                           style: TextStyle(
                             color: Colors.white,
                             fontFamily: 'Urbanist',
-                            fontSize: screenWidth * 0.045, // Scalable text size
+                            fontSize: screenWidth * 0.045, 
                           ),
                         ),
                       ),
                       SizedBox(
                           width: screenWidth *
-                              0.02), // Add spacing between field and buttons
+                              0.02), 
                       Column(
                         children: [
                           IconButton(
@@ -256,18 +253,18 @@ class _BloodpressureState extends State<Bloodpressure> {
                   Center(
                     child: Container(
                       width: screenWidth *
-                          0.8, // Button width is 80% of screen width
+                          0.8, 
                       child: ElevatedButton(
                         onPressed: _isButtonEnabled ? _saveAndNavigate : null,
                         child: Text(
                           'Next',
                           style: TextStyle(
                             fontFamily: 'Urbanist',
-                            fontSize: screenWidth * 0.045, // Scalable text size
+                            fontSize: screenWidth * 0.045, 
                           ),
                         ),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF009090), // Button color
+                          backgroundColor: Color(0xFF009090), 
                           padding: EdgeInsets.symmetric(
                               vertical: screenHeight * 0.02),
                           foregroundColor: Colors.white,
@@ -276,7 +273,7 @@ class _BloodpressureState extends State<Bloodpressure> {
                     ),
                   ),
                   SizedBox(
-                      height: screenHeight * 0.02), // Add spacing at the bottom
+                      height: screenHeight * 0.02), 
                 ],
               ),
             ),

@@ -21,7 +21,7 @@ class _MonthBarChartState extends State<MonthBarChart> {
         double chartWidth = constraints.maxWidth * 0.9;
         double chartHeight = constraints.maxHeight * 0.5;
         double barWidth =
-            chartWidth / (4 * 1.5); // 4 minggu dengan jarak antar bar
+            chartWidth / (4 * 1.5); 
 
         if (constraints.maxHeight.isInfinite) {
           chartHeight = 200;
@@ -59,7 +59,7 @@ class _MonthBarChartState extends State<MonthBarChart> {
                   leftTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
-                      interval: 10, // Menampilkan setiap interval 10 jam
+                      interval: 10, 
                       getTitlesWidget: (value, meta) {
                         if (value < minY || value > maxY) return Container();
 
@@ -103,7 +103,7 @@ class _MonthBarChartState extends State<MonthBarChart> {
                     tooltipMargin: 8,
                     getTooltipItem: (group, groupIndex, rod, rodIndex) {
                       double originalValue =
-                          widget.sleepData[group.x]; // Nilai asli
+                          widget.sleepData[group.x]; 
                       return BarTooltipItem(
                         '${originalValue.toInt()}j',
                         TextStyle(
@@ -114,8 +114,8 @@ class _MonthBarChartState extends State<MonthBarChart> {
                     },
                   ),
                 ),
-                minY: minY, // Set minY ke 40j
-                maxY: maxY, // Set maxY ke 90j
+                minY: minY, 
+                maxY: maxY, 
               ),
             ),
           ),
@@ -136,7 +136,7 @@ class _MonthBarChartState extends State<MonthBarChart> {
             toY: displayedValue,
             color: index == touchedIndex
                 ? Colors.red
-                : Color(0xFF60354A), // Mengubah warna saat disentuh
+                : Color(0xFF60354A), 
             width: barWidth,
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(8),

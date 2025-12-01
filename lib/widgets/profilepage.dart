@@ -121,7 +121,7 @@ class ProfilePage extends StatelessWidget {
                               width: screenSize.width * 0.08,
                             ),
                             onTap: () {
-                              // Tambahkan aksi untuk "Terms & Conditions"
+                              
                             },
                           ),
                           Padding(
@@ -168,7 +168,7 @@ class ProfilePage extends StatelessWidget {
               ),
             );
           } else {
-            // If there's no image path, display a default avatar
+            
             return Padding(
               padding: EdgeInsets.all(screenSize.width * 0.04),
               child: Column(
@@ -255,7 +255,7 @@ class ProfilePage extends StatelessWidget {
                               width: screenSize.width * 0.08,
                             ),
                             onTap: () {
-                              // Tambahkan aksi untuk "Terms & Conditions"
+                              
                             },
                           ),
                           Padding(
@@ -309,7 +309,7 @@ class ProfilePage extends StatelessWidget {
 
   Future<String?> _getImagePath(String email) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    // Gunakan key yang unik untuk setiap email
+    
     return prefs.getString('${email}_profile_image');
   }
 }
@@ -323,7 +323,7 @@ class Infoprofile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Tambahkan widget info profil di sini
+        
       ],
     );
   }

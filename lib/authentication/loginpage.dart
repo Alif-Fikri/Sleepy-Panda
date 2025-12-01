@@ -11,6 +11,7 @@ import 'package:sleepys/pages/data_user/heightselection.dart';
 import 'package:sleepys/pages/home.dart';
 import 'package:sleepys/authentication/singup.dart';
 import 'package:http/http.dart' as http;
+import 'package:sleepys/helper/api_endpoints.dart';
 import '../widgets/signupprovider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:art_sweetalert/art_sweetalert.dart';
@@ -84,7 +85,7 @@ class LoginPages extends StatelessWidget {
       return;
     }
 
-    // Tampilkan loading indicator
+    
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -92,7 +93,7 @@ class LoginPages extends StatelessWidget {
     );
 
     try {
-      final loginUrl = Uri.parse('http://103.129.148.84/login/');
+      final loginUrl = ApiEndpoints.authLogin();
       final response = await http.post(
         loginUrl,
         headers: {'Content-Type': 'application/json'},
@@ -106,12 +107,12 @@ class LoginPages extends StatelessWidget {
         final responseData = json.decode(response.body);
         final token = responseData['access_token'];
 
-        // Simpan token ke SharedPreferences
+        
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('token', token);
         await prefs.setString('email', email);
 
-        // Ambil profil user
+        
         await _getUserProfile(context, token);
       } else {
         final errorResponse = json.decode(response.body);
@@ -122,14 +123,14 @@ class LoginPages extends StatelessWidget {
     } catch (e) {
       showCustomSnackBar(context, "Terjadi kesalahan. Silakan coba lagi.");
     } finally {
-      // Tutup loading indicator
+      
       Navigator.of(context).pop();
     }
   }
 
   Future<void> _getUserProfile(BuildContext context, String token) async {
     try {
-      final url = Uri.parse('http://103.129.148.84/user-profile/');
+      final url = ApiEndpoints.usersMeProfile();
       final response = await http.get(
         url,
         headers: {
@@ -165,7 +166,7 @@ class LoginPages extends StatelessWidget {
 
         showCustomSnackBar(context, "Login berhasil");
 
-        // Cek status profil yang sudah disimpan
+        
         checkProfileCompletion(context, prefs.getString('email') ?? '');
       } else {
         final errorResponse = json.decode(response.body);
@@ -269,7 +270,7 @@ class LoginPages extends StatelessWidget {
       onWillPop: () async => false,
       child: Scaffold(
         resizeToAvoidBottomInset:
-            true, // Allow the widget to resize when the keyboard appears
+            true, 
         backgroundColor: const Color(0xFF1E1D42),
         body: Center(
           child: Padding(
@@ -504,7 +505,7 @@ class _ForgotPasswordBottomSheetState extends State<ForgotPasswordBottomSheet> {
 
     final email = emailController.text;
     final response = await http.post(
-      Uri.parse('http://103.129.148.84/request-otp/?email=$email'),
+      ApiEndpoints.authRequestOtp(email),
       headers: {'Content-Type': 'application/json'},
     );
 
@@ -536,11 +537,7 @@ class _ForgotPasswordBottomSheetState extends State<ForgotPasswordBottomSheet> {
       return;
     }
 
-    final url = Uri.parse('http://103.129.148.84/verify-otp/')
-        .replace(queryParameters: {
-      'email': email!,
-      'otp': otpController.text,
-    });
+    final url = ApiEndpoints.authVerifyOtp(email!, otpController.text);
 
     final response = await http.post(
       url,
@@ -563,11 +560,10 @@ class _ForgotPasswordBottomSheetState extends State<ForgotPasswordBottomSheet> {
   }
 
   Future<void> resetPassword() async {
-    final url = Uri.parse('http://103.129.148.84/reset-password/')
-        .replace(queryParameters: {
-      'email': email!,
-      'new_password': passwordController.text,
-    });
+    final url = ApiEndpoints.authResetPassword(
+      email!,
+      passwordController.text,
+    );
 
     final response = await http.post(
       url,
@@ -575,7 +571,7 @@ class _ForgotPasswordBottomSheetState extends State<ForgotPasswordBottomSheet> {
     );
 
     if (response.statusCode == 200) {
-      // Display success alert
+      
       ArtSweetAlert.show(
         context: context,
         artDialogArgs: ArtDialogArgs(
@@ -584,8 +580,8 @@ class _ForgotPasswordBottomSheetState extends State<ForgotPasswordBottomSheet> {
           text: "Password berhasil direset!",
           confirmButtonText: "OK",
           onConfirm: () {
-            Navigator.of(context).pop(); // Close the dialog
-            Navigator.of(context).pop(); // Close the bottom sheet
+            Navigator.of(context).pop(); 
+            Navigator.of(context).pop(); 
           },
         ),
       );

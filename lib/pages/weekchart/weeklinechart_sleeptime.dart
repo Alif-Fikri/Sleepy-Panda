@@ -15,8 +15,8 @@ class SleepLineChart extends StatefulWidget {
 class _SleepLineChartState extends State<SleepLineChart> {
   @override
   Widget build(BuildContext context) {
-    final double minY = 20.0; // 20:00 (8 PM)
-    final double maxY = 30.0; // 30.0 berarti 06:00 (6 AM keesokan harinya)
+    final double minY = 20.0; 
+    final double maxY = 30.0; 
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -190,18 +190,18 @@ class _SleepLineChartState extends State<SleepLineChart> {
         double yValue = widget.data[i]!;
         double adjustedY = yValue;
 
-        // Mengatur nilai yValue menjadi format 24 jam
+        
         if (yValue < 6) {
           yValue += 24;
         }
 
-        // Batas untuk visualisasi
+        
         if (yValue < minY) {
-          adjustedY = minY; // Letakkan pada batas bawah (20:00)
+          adjustedY = minY; 
         } else if (yValue > maxY) {
-          adjustedY = maxY; // Letakkan pada batas atas (06:00)
+          adjustedY = maxY; 
         } else {
-          adjustedY = yValue; // Tetap gunakan nilai asli
+          adjustedY = yValue; 
         }
 
         spots.add(FlSpot(i.toDouble(), adjustedY));
@@ -216,13 +216,13 @@ class _SleepLineChartState extends State<SleepLineChart> {
     if (originalY != null) {
       if (originalY < 6) {
         return originalY +
-            24.0; // Konversi dari 0-6 ke 24-30 untuk representasi
+            24.0; 
       } else if (originalY >= 20) {
-        return originalY; // Nilai asli dalam batas 20-30
+        return originalY; 
       } else {
-        return originalY; // Nilai asli untuk jam lainnya
+        return originalY; 
       }
     }
-    return 20.0; // Nilai default jika tidak ada data
+    return 20.0; 
   }
 }

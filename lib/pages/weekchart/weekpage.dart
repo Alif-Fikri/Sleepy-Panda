@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:sleepys/pages/weekchart/weekbarchart.dart';
 import 'package:sleepys/pages/weekchart/weeklinechart_sleeptime.dart';
 import 'package:sleepys/pages/weekchart/weeklinechart_wakeuptime.dart';
+import 'package:sleepys/helper/api_endpoints.dart';
 
 class WeekPage extends StatefulWidget {
   final String email;
@@ -17,9 +18,13 @@ class WeekPage extends StatefulWidget {
 
 Future<Map<String, dynamic>> fetchWeeklySleepData(
     String email, String startDate, String endDate) async {
-  final url =
-      'http://103.129.148.84/get-weekly-sleep-data/$email?start_date=$startDate&end_date=$endDate';
-  final response = await http.get(Uri.parse(url));
+  final response = await http.get(
+    ApiEndpoints.sleepWeekly(
+      email,
+      startDate: startDate,
+      endDate: endDate,
+    ),
+  );
 
   if (response.statusCode == 200) {
     return jsonDecode(response.body);
@@ -46,19 +51,19 @@ class _WeekPageState extends State<WeekPage> {
 
   void _previousWeek() {
     setState(() {
-      // Move to the previous week
+      
       startDate = startDate.subtract(Duration(days: 7));
       endDate = startDate.add(Duration(days: 6));
-      fetchAndSetWeeklyData(); // Fetch new data for the updated week
+      fetchAndSetWeeklyData(); 
     });
   }
 
   void _nextWeek() {
     setState(() {
-      // Move to the next week
+      
       startDate = startDate.add(Duration(days: 7));
       endDate = startDate.add(Duration(days: 6));
-      fetchAndSetWeeklyData(); // Fetch new data for the updated week
+      fetchAndSetWeeklyData(); 
     });
   }
 
@@ -67,22 +72,22 @@ class _WeekPageState extends State<WeekPage> {
     final endDateStr = DateFormat('yyyy-MM-dd').format(endDate);
 
     setState(() {
-      isLoading = true; // Start loading
-      weeklyData.clear(); // Clear old data before fetching new data
+      isLoading = true; 
+      weeklyData.clear(); 
     });
 
     try {
       final data =
           await fetchWeeklySleepData(widget.email, startDateStr, endDateStr);
-      print('Fetched Data: $data'); // Debugging line
+      print('Fetched Data: $data'); 
       setState(() {
         weeklyData = data;
-        isLoading = false; // Stop loading after data is fetched
+        isLoading = false; 
       });
     } catch (e) {
       setState(() {
-        weeklyData = {}; // Empty data indicates no record found
-        isLoading = false; // Stop loading even if there's an error
+        weeklyData = {}; 
+        isLoading = false; 
       });
     }
   }
@@ -100,7 +105,7 @@ class _WeekPageState extends State<WeekPage> {
         : List<double>.filled(7, 0.0);
     print("Weekly Data: ${weeklyData['daily_sleep_start_times']}");
 
-    // Proses waktu mulai tidur
+    
     final sleepStartTimes =
         (weeklyData.containsKey('daily_sleep_start_times') &&
                 weeklyData['daily_sleep_start_times'] is Map)
@@ -110,7 +115,7 @@ class _WeekPageState extends State<WeekPage> {
                 if (times != null && times.isNotEmpty) {
                   String latestTime = times.last as String;
                   print(
-                      'Sleep Start Time on day $index: $latestTime'); // Tambahkan log
+                      'Sleep Start Time on day $index: $latestTime'); 
                   double hours = double.parse(latestTime.split(":")[0]);
                   double minutes = double.parse(latestTime.split(":")[1]) / 60;
                   return hours + minutes;
@@ -120,24 +125,24 @@ class _WeekPageState extends State<WeekPage> {
               })
             : List<double?>.filled(7, null);
 
-// Proses waktu bangun tidur
+
     final wakeUpTimes = (weeklyData.containsKey('daily_wake_times') &&
             weeklyData['daily_wake_times'] is Map)
         ? List<double?>.generate(7, (index) {
             List<dynamic>? times =
                 weeklyData['daily_wake_times'][index.toString()];
             if (times != null && times.isNotEmpty) {
-              // Ambil data terakhir yang ada di list 'times'
+              
               String latestTime = times.last as String;
               double hours = double.parse(latestTime.split(":")[0]);
               double minutes = double.parse(latestTime.split(":")[1]) / 60;
               return hours + minutes;
             } else {
-              return null; // Jika tidak ada data, kembalikan null
+              return null; 
             }
           })
         : List<double?>.filled(
-            7, null); // Gunakan List dengan tipe double? untuk nullable
+            7, null); 
 
     final dateFormat = DateFormat('d MMMM', 'id');
     double baseFontSize = MediaQuery.of(context).size.width * 0.04;
@@ -165,7 +170,7 @@ class _WeekPageState extends State<WeekPage> {
             children: [
               WeeklySleepProfile(
                 email: widget.email,
-                hasSleepData: hasFullWeekData, // Only show if full week data
+                hasSleepData: hasFullWeekData, 
               ),
               SizedBox(height: 10),
               Text(
@@ -192,7 +197,7 @@ class _WeekPageState extends State<WeekPage> {
                       setState(() {
                         _isBackButtonPressed = !_isBackButtonPressed;
                         _isNextButtonPressed =
-                            false; // Reset other button state
+                            false; 
                         _previousWeek();
                       });
                     },
@@ -217,7 +222,7 @@ class _WeekPageState extends State<WeekPage> {
                       setState(() {
                         _isNextButtonPressed = !_isNextButtonPressed;
                         _isBackButtonPressed =
-                            false; // Reset other button state
+                            false; 
                         _nextWeek();
                       });
                     },
@@ -379,27 +384,27 @@ class SleepEntry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get screen width
+    
     double screenWidth = MediaQuery.of(context).size.width;
 
-    // Adjust sizes based on screen width
-    final double imageHeight = screenWidth * 0.06; // 6% of screen width
-    final double imageWidth = screenWidth * 0.06; // 6% of screen width
-    final double fontSizeContent = screenWidth * 0.035; // 3.5% of screen width
-    final double fontSizeTitle = screenWidth * 0.03; // 3% of screen width
-    final double fontSizeValue = screenWidth * 0.03; // 3% of screen width
+    
+    final double imageHeight = screenWidth * 0.06; 
+    final double imageWidth = screenWidth * 0.06; 
+    final double fontSizeContent = screenWidth * 0.035; 
+    final double fontSizeTitle = screenWidth * 0.03; 
+    final double fontSizeValue = screenWidth * 0.03; 
 
-    final double imageTop = screenWidth * 0.05; // 5% of screen width
-    final double imageLeft = screenWidth * 0.025; // 2.5% of screen width
-    final double contentLeft = screenWidth * 0.1; // 10% of screen width
-    final double contentTop = screenWidth * 0.0125; // 1.25% of screen width
-    final double titleTop = screenWidth * 0.05; // 5% of screen width
-    final double valueTop = screenWidth * 0.0875; // 8.75% of screen width
+    final double imageTop = screenWidth * 0.05; 
+    final double imageLeft = screenWidth * 0.025; 
+    final double contentLeft = screenWidth * 0.1; 
+    final double contentTop = screenWidth * 0.0125; 
+    final double titleTop = screenWidth * 0.05; 
+    final double valueTop = screenWidth * 0.0875; 
 
     return Card(
       color: Color(0xFF272E49),
       child: Padding(
-        padding: EdgeInsets.all(screenWidth * 0.025), // 2.5% of screen width
+        padding: EdgeInsets.all(screenWidth * 0.025), 
         child: Stack(
           children: [
             Positioned(
