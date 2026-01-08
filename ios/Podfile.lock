@@ -71,7 +71,7 @@ SPEC CHECKSUMS:
   alarm: 839eba06f468218db1b9f1736e32322db958e857
   app_links: 3da4c36b46cac3bf24eb897f1a6ce80bda109874
   connectivity_plus: 3f6c9057f4cd64198dc826edfb0542892f825343
-  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   flutter_fgbg: d3da78df78454b1808f0829a5da9cd17dfe16444
   flutter_local_notifications: ad39620c743ea4c15127860f4b5641649a988100
   image_cropper: 5f162dcf988100dc1513f9c6b7eb42cd6fbf9156
@@ -81,6 +81,6 @@ SPEC CHECKSUMS:
   shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
   TOCropViewController: 80b8985ad794298fb69d3341de183f33d1853654
 
-PODFILE CHECKSUM: 4305caec6b40dde0ae97be1573c53de1882a07e5
+PODFILE CHECKSUM: 3c63482e143d1b91d2d2560aee9fb04ecc74ac7e
 
 COCOAPODS: 1.16.2

@@ -1,5 +1,6 @@
 # Sleepy Panda
-
+![alt text](image.png) ![alt text](image-1.png) ![alt text](image-2.png)
+![alt text](image-3.png) ![alt text](image-4.png) ![alt text](image-5.png)
 
 ## Tentang Sleepy Panda
 Sleepy Panda adalah aplikasi yang dirancang untuk membantu karyawan dalam memantau dan menganalisis pola tidur mereka. Dengan teknologi AI, Sleepy Panda memberikan wawasan terkait kualitas tidur serta rekomendasi yang dipersonalisasi untuk meningkatkan kesehatan dan produktivitas karyawan.

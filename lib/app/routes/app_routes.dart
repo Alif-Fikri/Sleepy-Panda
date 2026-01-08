@@ -1,0 +1,29 @@
+abstract class AppRoutes {
+  static const splash = '/';
+  static const authChoice = '/auth/choice';
+  static const login = '/auth/login';
+  static const signup = '/auth/signup';
+  static const onboardingName = '/onboarding/name';
+  static const onboardingGender = '/onboarding/gender';
+  static const onboardingWork = '/onboarding/work';
+  static const onboardingDate = '/onboarding/date';
+  static const onboardingHeight = '/onboarding/height';
+  static const onboardingWeight = '/onboarding/weight';
+  static const home = '/home';
+  static const journalDaily = '/journal/daily';
+  static const journalWeek = '/journal/week';
+  static const journalMonth = '/journal/month';
+  static const predictionDaily = '/prediction/daily';
+  static const predictionWeek = '/prediction/week';
+  static const predictionMonth = '/prediction/month';
+  static const predictionResult = '/prediction/result';
+  static const userProfile = '/user/profile';
+  static const profile = '/profile';
+  static const profileDetail = '/profile/detail';
+  static const feedback = '/feedback';
+  static const alarm = '/alarm';
+  static const metricsBloodPressure = '/metrics/blood-pressure';
+  static const metricsDailySteps = '/metrics/daily-steps';
+  static const metricsHeartRate = '/metrics/heart-rate';
+  static const metricsSleep = '/metrics/sleep';
+}

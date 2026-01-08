@@ -1,30 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'authentication/splashscreen.dart';
-import '../widgets/signupprovider.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter/services.dart';
-import 'package:sleepys/helper/ProfileImageProvider.dart';
+import 'package:get/get.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
-void main() async {
+import 'app/core/bindings/initial_binding.dart';
+import 'app/routes/app_pages.dart';
+
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  
   await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp, 
+    DeviceOrientation.portraitUp,
   ]);
 
   await initializeDateFormatting('id', null);
 
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => SignupFormProvider()),
-        ChangeNotifierProvider(create: (_) => ProfileImageProvider()),
-      ],
-      child: MyApp(),
-    ),
-  );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -32,15 +23,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
-      routes: {
-        '/': (context) => SplashScreen(),
-      },
-      theme: ThemeData(
-        fontFamily: 'Urbanist',
-      ),
+      initialRoute: AppPages.initial,
+      getPages: AppPages.routes,
+      initialBinding: InitialBinding(),
+      theme: ThemeData(fontFamily: 'Urbanist'),
     );
   }
 }

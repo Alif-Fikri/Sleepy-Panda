@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sleepys/pages/prediction/sleep_profile_daily.dart';
-import 'package:sleepys/pages/prediction/sleep_profile_month.dart';
-import 'package:sleepys/pages/prediction/sleep_profile_week.dart';
+import 'package:get/get.dart';
+
+import '../app/routes/app_routes.dart';
 
 class DailySleepProfile extends StatelessWidget {
   final String email;
@@ -32,7 +32,7 @@ class DailySleepProfile extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 5),
-              if (hasSleepData) 
+              if (hasSleepData)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -45,11 +45,10 @@ class DailySleepProfile extends StatelessWidget {
                           backgroundColor: Color(0xFF009090),
                         ),
                         onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => SleepProfileDaily(
-                              email: email,
-                            ),
-                          ));
+                          Get.toNamed(
+                            AppRoutes.predictionDaily,
+                            arguments: {'email': email},
+                          );
                         },
                         child: Text(
                           'Lihat profil tidur harian',
@@ -74,7 +73,7 @@ class DailySleepProfile extends StatelessWidget {
 
 class WeeklySleepProfile extends StatelessWidget {
   final String email;
-  final bool hasSleepData; 
+  final bool hasSleepData;
 
   WeeklySleepProfile({required this.email, required this.hasSleepData});
 
@@ -101,7 +100,7 @@ class WeeklySleepProfile extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 5),
-              if (hasSleepData) 
+              if (hasSleepData)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -114,11 +113,10 @@ class WeeklySleepProfile extends StatelessWidget {
                           backgroundColor: Color(0xFF009090),
                         ),
                         onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => SleepProfileWeek(
-                              email: email,
-                            ),
-                          ));
+                          Get.toNamed(
+                            AppRoutes.predictionWeek,
+                            arguments: {'email': email},
+                          );
                         },
                         child: Text(
                           'Lihat profil tidur mingguan',
@@ -143,7 +141,7 @@ class WeeklySleepProfile extends StatelessWidget {
 
 class MonthlySleepProfile extends StatelessWidget {
   final String email;
-  final bool hasSleepData; 
+  final bool hasSleepData;
 
   MonthlySleepProfile({required this.email, required this.hasSleepData});
 
@@ -170,7 +168,7 @@ class MonthlySleepProfile extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 5),
-              if (hasSleepData) 
+              if (hasSleepData)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -183,11 +181,10 @@ class MonthlySleepProfile extends StatelessWidget {
                           backgroundColor: Color(0xFF009090),
                         ),
                         onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => SleepProfileMonth(
-                              email: email,
-                            ),
-                          ));
+                          Get.toNamed(
+                            AppRoutes.predictionMonth,
+                            arguments: {'email': email},
+                          );
                         },
                         child: Text(
                           'Lihat profil tidur bulanan',
